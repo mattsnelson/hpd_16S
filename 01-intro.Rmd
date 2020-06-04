@@ -4,10 +4,23 @@ You can label chapter and section titles using `{#label}` after them, e.g., we c
 
 Figures and tables with captions will be placed in `figure` and `table` environments, respectively.
 
-```{r nice-fig, fig.cap='Here is a nice figure!', out.width='80%', fig.asp=.75, fig.align='center'}
-par(mar = c(4, 4, .1, .1))
-plot(pressure, type = 'b', pch = 19)
+
+This anlaysis was coducted using QIIME 2020.2. First step, download the yml file and then use it to create a conda environment for the install. 
+
+```{bash}
+wget https://data.qiime2.org/distro/core/qiime2-2020.2-py36-linux-conda.yml
+conda env create -n qiime2-2020.2 --file qiime2-2020.2-py36-linux-conda.yml
 ```
+
+Then activate the conda environment  
+
+```{bash}
+source activate qiime2-2020.2
+```
+
+
+
+
 
 Reference a figure by its code chunk label with the `fig:` prefix, e.g., see Figure \@ref(fig:nice-fig). Similarly, you can reference tables generated from `knitr::kable()`, e.g., see Table \@ref(tab:nice-tab).
 
