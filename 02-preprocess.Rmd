@@ -51,17 +51,45 @@ qiime metadata tabulate \
 $ qiime feature-table summarize \
   --i-table table.qza \
   --o-visualization table.qzv \
-  --m-sample-metadata-file metadata/metadata-formatted.txt 
+  --m-sample-metadata-file ../metadata.txt 
 
 $ qiime feature-table tabulate-seqs \
-  --i-data rep-seqs.qza \
-  --o-visualization rep-seqs.qzv
+  --i-data representative_sequences.qza \
+  --o-visualization representative_sequences.qzv
 ```
 
+Note: min freq: 20,718.0 reads
 
 
+## Train Classifier (for doing taxonomy)
 
+First up, we gotta import a the greengenes database stuff into qiime as qiime artifacts.
 
+```{bash}
+$ mkdir classifier
+$ cd classifier
 
+# download green genes 13_8
+$ wget ftp://greengenes.microbio.me/greengenes_release/gg_13_5/gg_13_8_otus.tar.gz
+$ gunzip gg_13_8_otus.tar.gz
+$ tar -xvf gg_13_8_otus.tar
+$ rm gg_13_8_otus.tar
 
+ # the sequences from greengenes
+$ qiime tools import \
+--type 'FeatureData[Sequence]' \
+--input-path gg_13_8_otus/rep_set/99_otus.fasta \
+--output-path 99_otus.qza
+
+# The taxonomy strings from greengenes
+$ qiime tools import \
+--type 'FeatureData[Taxonomy]' \
+--input-format HeaderlessTSVTaxonomyFormat \
+--input-path gg_13_8_otus/taxonomy/99_otu_taxonomy.txt \
+--output-path 99_otus_16S_taxonomy.qza
+
+```
+
+up to here...next step: extracrt ref section (double check primer pair used for this study..was sent to aec)
+so ? was 515 / 806 dbl check what did with db/db study.
 
