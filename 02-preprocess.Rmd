@@ -1,0 +1,67 @@
+# Pre-processing Sequence Reads
+
+These sequences are named like this: `J108_S100_L001_R1_001.fastq.gz`. importing into qiime has a little sad caue all of them start with J108..therefore I manually renamed them with their sample ID S2147, S2148, etc in place fo the J108.
+
+First up gotta import reads into a qiime artifact (called here `input-data-casava`)
+
+```{bash}
+qiime tools import --type 'SampleData[PairedEndSequencesWithQuality]' --input-path data-raw/ --input-format CasavaOneEightSingleLanePerSampleDirFmt --output-path input-data-casava.qza
+```
+
+Denoise with dada2:
+
+```{bash}
+qiime dada2 denoise-paired --i-demultiplexed-seqs input-data-casava.qza --p-trim-left-f 15 --p-trim-left-r 15 --p-trunc-len-f 260 --p-trunc-len-r 215 --o-table table.qza --o-representative-sequences rep-seqs.qza --o-denoising-stats denoising-stats.qza
+```
+
+setting up as  per rachel lappans way:
+
+This step takes a while may want to setup within a tmux session if running on nectar cloud. 
+```{bash}
+qiime dada2 denoise-paired \
+--p-n-threads 8 \
+--i-demultiplexed-seqs input-data-casava.qza \
+--p-trim-left-f 15 \
+--p-trim-left-r 15 \
+--p-trunc-len-f 260 \
+--p-trunc-len-r 215 \
+--output-dir DADA2_denoising_output \
+--verbose \
+&> DADA2_denoising.log
+```
+
+So now we have a folder, `DADA2_denoisng_output` with following items in there:
+- denoising_stats.qza 
+- 
+- 
+
+## Check densoing stats
+```{bash}
+cd DADA2_denoisng_output
+qiime metadata tabulate \
+--m-input-file denoising_stats.qza \
+--o-visualization denoising_stats.qzv \
+```
+
+## Get FeatureTable [frequency] and FeatureData [sequences]
+
+#TODO check metadata file ready for it first.
+
+```{bash}
+$ qiime feature-table summarize \
+  --i-table table.qza \
+  --o-visualization table.qzv \
+  --m-sample-metadata-file metadata/metadata-formatted.txt 
+
+$ qiime feature-table tabulate-seqs \
+  --i-data rep-seqs.qza \
+  --o-visualization rep-seqs.qzv
+```
+
+
+
+
+
+
+
+

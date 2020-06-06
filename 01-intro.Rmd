@@ -1,9 +1,16 @@
-# Introduction {#intro}
+# Setup and QC {#intro}
 
 You can label chapter and section titles using `{#label}` after them, e.g., we can reference Chapter \@ref(intro). If you do not manually label them, there will be automatic labels anyway, e.g., Chapter \@ref(methods).
 
 Figures and tables with captions will be placed in `figure` and `table` environments, respectively.
 
+STARTS here my notes:
+
+Big shoutout and credit to Rachel Lappns guide here -which kinda inspired me to do this thing too: https://rachaellappan.github.io/VL-QIIME2-analysis/pre-processing-of-sequence-reads.html
+
+
+
+## Install QIIME and acitvate conda environment
 
 This anlaysis was coducted using QIIME 2020.2. First step, download the yml file and then use it to create a conda environment for the install. 
 
@@ -15,8 +22,76 @@ conda env create -n qiime2-2020.2 --file qiime2-2020.2-py36-linux-conda.yml
 Then activate the conda environment  
 
 ```{bash}
-source activate qiime2-2020.2
+conda activate qiime2-2020.2
 ```
+
+## Folder structure
+
+From the squenicng provider, we have paired end reads (R1 and R2) provided as gzipped fastq files. These are in the `data-raw` folder:
+```{bash}
+── data-raw
+│   ├── J108_S100_L001_R1_001.fastq.gz
+│   ├── J108_S100_L001_R2_001.fastq.gz
+│   ├── J108_S101_L001_R1_001.fastq.gz
+│   ├── J108_S101_L001_R2_001.fastq.gz
+│   ├── J108_S102_L001_R1_001.fastq.gz
+│   ├── J108_S102_L001_R2_001.fastq.gz
+│   ├── J108_S103_L001_R1_001.fastq.gz
+│   ├── J108_S103_L001_R2_001.fastq.gz
+│   ├── J108_S104_L001_R1_001.fastq.gz
+│   ├── J108_S104_L001_R2_001.fastq.gz
+│   ├── J108_S111_L001_R1_001.fastq.gz
+│   ├── J108_S111_L001_R2_001.fastq.gz
+│   ├── J108_S112_L001_R1_001.fastq.gz
+│   ├── J108_S112_L001_R2_001.fastq.gz
+│   ├── J108_S113_L001_R1_001.fastq.gz
+│   ├── J108_S113_L001_R2_001.fastq.gz
+│   ├── J108_S114_L001_R1_001.fastq.gz
+│   ├── J108_S114_L001_R2_001.fastq.gz
+│   ├── J108_S115_L001_R1_001.fastq.gz
+│   ├── J108_S115_L001_R2_001.fastq.gz
+│   ├── J108_S116_L001_R1_001.fastq.gz
+│   ├── J108_S116_L001_R2_001.fastq.gz
+│   ├── J108_S99_L001_R1_001.fastq.gz
+│   └── J108_S99_L001_R2_001.fastq.gz
+```
+
+## Quality Check (FastQC)
+
+Run fastqc. Note that these are gzipped fastqc files, but fastqc still works.
+
+```{bash}
+fastqc data-raw/*.fastq.gz
+```
+Running fastqc generates a fastqc.zip file and fastqc.html per fastq file. Move the fastqc generated files into a `results/fastqc` folder.
+
+```{bash}
+mkdir results/
+mkdir results/fastqc
+mv data-raw/*fastqc* results/fastqc/
+```
+
+It's also handy to run mutliQC as this allows to look at quality of all samples at once (rather than one at a time with fastQC reports)
+
+First up, install multiQC (if not already installed)
+
+```{bash}
+conda install -c bioconda -c conda-forge multiqc
+```
+
+Then run multiqc on the `results/fastqc` folder.
+
+```{bash}
+mkdir results/multiqc
+multiqc results/fastqc/* -o results/multiqc/
+```
+
+Note: So you can generate fastqc reports for individual files as part of the daad2 workflow (which we'll do below) - the benefit of this workflow is that we get a multiqc report where we can see all the samples at once. Benefit here is if there's one real stinker you'll be able to see it which you might miss if looking at individual fastqc reports.
+
+#TODO add in the multiqc output here as a pic methinks - make a note how R reads are always gonna be worse.
+
+Based on multiQC report: will choose limits of F 260 bp and R : 215 bp
+
 
 
 
