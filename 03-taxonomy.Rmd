@@ -1,0 +1,16 @@
+# Taxonomic Analysis
+
+Taxonomic analysis - taxa barplots
+```{bash}
+$ qiime taxa barplot \
+--i-table DADA2_denoising_output/table.qza \
+--i-taxonomy taxonomy/classified_rep_seqs.qza \
+--m-metadata-file metadata.txt \
+--o-visualization taxonomy/taxa_barplots.qzv
+```
+
+
+This provides taxonomic barplots which I can then download as SVG (also allows for download as csv..which means I can then do as a LefSE plot)
+Downloaded csvs and have placed in fig/taxa_barplots/ folder
+
+

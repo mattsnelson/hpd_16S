@@ -8,15 +8,10 @@ First up gotta import reads into a qiime artifact (called here `input-data-casav
 qiime tools import --type 'SampleData[PairedEndSequencesWithQuality]' --input-path data-raw/ --input-format CasavaOneEightSingleLanePerSampleDirFmt --output-path input-data-casava.qza
 ```
 
-Denoise with dada2:
+# Denoise with dada2
 
-```{bash}
-qiime dada2 denoise-paired --i-demultiplexed-seqs input-data-casava.qza --p-trim-left-f 15 --p-trim-left-r 15 --p-trunc-len-f 260 --p-trunc-len-r 215 --o-table table.qza --o-representative-sequences rep-seqs.qza --o-denoising-stats denoising-stats.qza
-```
+This step takes a while may want to setup within a tmux session if running on nectar cloud. Note I use a trim-left parameter of 15 on both the forward and reverse reads to deal with the amplicon primers (as seems to work better than using cut-adapt).
 
-setting up as  per rachel lappans way:
-
-This step takes a while may want to setup within a tmux session if running on nectar cloud. 
 ```{bash}
 qiime dada2 denoise-paired \
 --p-n-threads 8 \
@@ -32,8 +27,8 @@ qiime dada2 denoise-paired \
 
 So now we have a folder, `DADA2_denoisng_output` with following items in there:
 - denoising_stats.qza 
-- 
-- 
+- representative_sequences.qza
+- table.qza
 
 ## Check densoing stats
 ```{bash}
@@ -44,8 +39,6 @@ qiime metadata tabulate \
 ```
 
 ## Get FeatureTable [frequency] and FeatureData [sequences]
-
-#TODO check metadata file ready for it first.
 
 ```{bash}
 $ qiime feature-table summarize \
@@ -90,6 +83,68 @@ $ qiime tools import \
 
 ```
 
-up to here...next step: extracrt ref section (double check primer pair used for this study..was sent to aec)
-so ? was 515 / 806 dbl check what did with db/db study.
+Extract reads from the relevant region (V3-V5) out of the ref database
 
+```{bash}
+$ qiime feature-classifier extract-reads \
+--i-sequences 99_otus.qza \
+--p-f-primer CCTACGGGNGGCWGCAG  \
+--p-r-primer GACTACHVGGGTATCTAATCC   \
+--p-min-length 300 \
+--p-max-length 600 \
+--o-reads ref_seqs.qza \
+--verbose \
+&> 16S_training.log
+```
+
+Now, train the classifier on this region. I.e use this `ref_seqs.qza` qiime artifact as the input for feature-classifier. 
+
+```{bash}
+$ qiime feature-classifier fit-classifier-naive-bayes \
+--i-reference-reads ref_seqs.qza \
+--i-reference-taxonomy 99_otus_16S_taxonomy.qza \
+--o-classifier classifier_16S.qza \
+--verbose \
+&> 16S_classifier.log
+```
+
+The output of this is our classifier, which I’ve called `classifier_16S.qza`, is what will be used in the next step.
+
+Classify rep seqs 
+So now we’ve got the classifier, we can use it to classify our representative seqs (rep-seqs.qza), which I then tabulated and visualised:
+
+```{bash}
+$ cd ..
+$ mkdir taxonomy
+
+$ qiime feature-classifier classify-sklearn \
+--i-classifier classifier/classifier_16S.qza \
+--i-reads DADA2_denoising_output/representative_sequences.qza \
+--o-classification taxonomy/classified_rep_seqs.qza
+
+# Tabulate the features, their taxonomy and the confidence of taxonomy assignment
+$ cd taxonomy
+
+$ qiime metadata tabulate \
+--m-input-file classified_rep_seqs.qza \
+--o-visualization classified_rep_seqs.qzv
+```
+
+# Create a phylogenetic tree
+
+Note that this only needs the rep seqs (not the classified rep seqs)
+
+```{bash}
+$ cd ..
+
+$ qiime phylogeny align-to-tree-mafft-fasttree \
+--i-sequences DADA2_denoising_output/representative_sequences.qza \
+--output-dir phylogenetic_tree \
+--p-n-threads 8 \
+--verbose \
+&> phylogenetic_tree_generation.log
+```
+
+Note: it's the rooted_tree.qza file which will be used in downstream analyses.
+
+Now on to the fun stuff - taxonomy and diversity analyses!

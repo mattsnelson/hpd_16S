@@ -1,0 +1,14 @@
+# Alpha and Beta Diversity Analyses
+
+Use sampling depth of 20718 (including all samples)
+
+```{bash}
+$ qiime diversity core-metrics-phylogenetic \
+  --i-phylogeny phylogenetic_tree/rooted_tree.qza \
+  --i-table DADA2_denoising_output/table.qza \
+  --p-sampling-depth 20718  \
+  --m-metadata-file metadata.txt \
+  --output-dir core-metrics-results
+```
+
+
