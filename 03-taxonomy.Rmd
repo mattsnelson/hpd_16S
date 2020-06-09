@@ -14,3 +14,26 @@ This provides taxonomic barplots which I can then download as SVG (also allows f
 Downloaded csvs and have placed in fig/taxa_barplots/ folder
 
 
+Generate heatmap 
+
+```{bash}
+$ mkdir collapsed-tables
+$ mkdir heatmaps
+
+$ qiime taxa collapse \
+--i-table DADA2_denoising_output/table.qza \
+--i-taxonomy taxonomy/classified_rep_seqs.qza \
+--p-level 7 \
+--o-collapsed-table collapsed-tables/collapsed-table-l7.qza
+
+$ qiime feature-table heatmap \
+--i-table collapsed-tables/collapsed-table-l7.qza \
+--m-sample-metadata-file metadata.txt \
+--m-sample-metadata-column treatment \
+--o-visualization heatmaps/heatmap-l7.qzv
+
+```
+
+
+
+

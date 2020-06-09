@@ -1,6 +1,22 @@
 # Alpha and Beta Diversity Analyses
 
-Use sampling depth of 20718 (including all samples)
+NOte: Use sampling depth of 20718 (including all samples)
+
+Alhpa Rarefaction Curves
+
+```{bash}
+$ mkdir alpha_rarefaction
+
+$ qiime diversity alpha-rarefaction \
+--i-table DADA2_denoising_output/table.qza \
+--i-phylogeny phylogenetic_tree/rooted_tree.qza \
+--p-max-depth 20718 \
+--m-metadata-file metadata.txt \
+--o-visualization alpha_rarefaction/rarefaction_20718.qzv
+```
+
+
+Diversity Metrics
 
 ```{bash}
 $ qiime diversity core-metrics-phylogenetic \
@@ -9,6 +25,19 @@ $ qiime diversity core-metrics-phylogenetic \
   --p-sampling-depth 20718  \
   --m-metadata-file metadata.txt \
   --output-dir core-metrics-results
+```
+
+Then I used this script from [Rachel Lappan](https://rachaellappan.github.io/VL-QIIME2-analysis/alpha-and-beta-diversity.html) to iterate the alpha-group-significance plugin
+
+```{bash}
+for result in *vector.qza; \
+do \
+outname=${result/_vector.qza/_group_significance.qzv}; \
+qiime diversity alpha-group-significance \
+--i-alpha-diversity $result \
+--m-metadata-file ../metadata.txt \
+--o-visualization $outname; \
+done
 ```
 
 
