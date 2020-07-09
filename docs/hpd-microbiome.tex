@@ -1,0 +1,564 @@
+\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[]{book}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provides euro and other symbols
+\else % if luatex or xelatex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage[]{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\usepackage{hyperref}
+\hypersetup{
+            pdftitle={High Protein Diet Microbiome Analysis},
+            pdfauthor={Matthew Snelson},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs}
+% Fix footnotes in tables (requires footnote package)
+\IfFileExists{footnote.sty}{\usepackage{footnote}\makesavenoteenv{longtable}}{}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
+\usepackage{booktabs}
+\usepackage{amsthm}
+\makeatletter
+\def\thm@space@setup{%
+  \thm@preskip=8pt plus 2pt minus 4pt
+  \thm@postskip=\thm@preskip
+}
+\makeatother
+\usepackage[]{natbib}
+\bibliographystyle{plainnat}
+
+\title{High Protein Diet Microbiome Analysis}
+\author{Matthew Snelson}
+\date{2020-07-09}
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{1}
+\tableofcontents
+}
+\hypertarget{intro}{%
+\chapter{Intro}\label{intro}}
+
+This is the code for the microbiome analysis associated with this \href{}{paper - \#TODO add link when published}. The inspiration for documenting this analysis using bookdown came from Rachel Lappan - I would highly recommend checking out her analysis \href{https://rachaellappan.github.io/VL-QIIME2-analysis/pre-processing-of-sequence-reads.html}{here}.
+
+\hypertarget{setup-and-qc}{%
+\chapter{Setup and QC}\label{setup-and-qc}}
+
+\hypertarget{install-qiime-and-acitvate-conda-environment}{%
+\section{Install QIIME and acitvate conda environment}\label{install-qiime-and-acitvate-conda-environment}}
+
+This anlaysis was coducted using QIIME 2020.2. First step, download the yml file and then use it to create a conda environment for the install.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{$ }\FunctionTok{wget}\NormalTok{ https://data.qiime2.org/distro/core/qiime2-2020.2-py36-linux-conda.yml}
+\NormalTok{$ }\ExtensionTok{conda}\NormalTok{ env create -n qiime2-2020.2 --file qiime2-2020.2-py36-linux-conda.yml}
+\end{Highlighting}
+\end{Shaded}
+
+Then activate the conda environment
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{$ }\ExtensionTok{conda}\NormalTok{ activate qiime2-2020.2}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{quality-check-fastqc}{%
+\section{Quality Check (FastQC)}\label{quality-check-fastqc}}
+
+Run fastqc. Note that these are gzipped fastqc files, but fastqc still works.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{$ }\ExtensionTok{fastqc}\NormalTok{ data-raw/*.fastq.gz}
+\end{Highlighting}
+\end{Shaded}
+
+Running fastqc generates a fastqc.zip file and fastqc.html per fastq file. Move the fastqc generated files into a \texttt{results/fastqc} folder.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{$ }\FunctionTok{mkdir}\NormalTok{ results/}
+\NormalTok{$ }\FunctionTok{mkdir}\NormalTok{ results/fastqc}
+\NormalTok{$ }\FunctionTok{mv}\NormalTok{ data-raw/*fastqc* results/fastqc/}
+\end{Highlighting}
+\end{Shaded}
+
+It's also handy to run mutliQC as this allows to look at quality of all samples at once (rather than one at a time with fastQC reports)
+
+First up, install multiQC (if not already installed)
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{$ }\ExtensionTok{conda}\NormalTok{ install -c bioconda -c conda-forge multiqc}
+\end{Highlighting}
+\end{Shaded}
+
+Then run multiqc on the \texttt{results/fastqc} folder.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{$ }\FunctionTok{mkdir}\NormalTok{ results/multiqc}
+\NormalTok{$ }\ExtensionTok{multiqc}\NormalTok{ results/fastqc/* -o results/multiqc/}
+\end{Highlighting}
+\end{Shaded}
+
+Note: FastQC generates fastqc reports for individual files, the benefit of using mutliqc is that we get a report where we can see all the samples at once. Benefit here is if there's one real stinker you'll be able to see it which you might miss if looking at individual fastqc reports. In the plot below the red are all the reverse reads, the quality of the reverse reads tends to always drop off sooner than the forward reads.
+
+\begin{figure}
+\centering
+\includegraphics{figs/fastqc_per_base_sequence_quality_plot.png}
+\caption{multiqc results}
+\end{figure}
+
+Based on the multiQC report: will choose limits of F 260 bp and R : 215 bp
+
+\hypertarget{pre-processing-sequence-reads}{%
+\chapter{Pre-processing Sequence Reads}\label{pre-processing-sequence-reads}}
+
+\hypertarget{import-data}{%
+\section{Import data}\label{import-data}}
+
+First up gotta import reads into a qiime artifact (called here \texttt{input-data-casava})
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{$ }\ExtensionTok{qiime}\NormalTok{ tools import \textbackslash{}}
+\NormalTok{--type }\StringTok{'SampleData[PairedEndSequencesWithQuality]'}\NormalTok{ \textbackslash{}}
+\NormalTok{--input-path data-raw/ \textbackslash{}}
+\NormalTok{--input-format CasavaOneEightSingleLanePerSampleDirFmt \textbackslash{}}
+\NormalTok{--output-path input-data-casava.qza}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{denoise-with-dada2}{%
+\section{Denoise with dada2}\label{denoise-with-dada2}}
+
+This step takes a while. so may want to setup within a tmux session if running on nectar cloud. Note I use a trim-left parameter of 15 on both the forward and reverse reads to deal with the amplicon primers (as seems to work better than using cut-adapt).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{$ }\ExtensionTok{qiime}\NormalTok{ dada2 denoise-paired \textbackslash{}}
+\NormalTok{--p-n-threads 8 \textbackslash{}}
+\NormalTok{--i-demultiplexed-seqs input-data-casava.qza \textbackslash{}}
+\NormalTok{--p-trim-left-f 15 \textbackslash{}}
+\NormalTok{--p-trim-left-r 15 \textbackslash{}}
+\NormalTok{--p-trunc-len-f 260 \textbackslash{}}
+\NormalTok{--p-trunc-len-r 215 \textbackslash{}}
+\NormalTok{--output-dir DADA2_denoising_output \textbackslash{}}
+\NormalTok{--verbose \textbackslash{}}
+\OperatorTok{&>}\NormalTok{ DADA2_denoising.log}
+\end{Highlighting}
+\end{Shaded}
+
+So now we have a folder, \texttt{DADA2\_denoisng\_output} with following items in there:
+- denoising\_stats.qza
+- representative\_sequences.qza
+- table.qza
+
+\hypertarget{check-denoising-stats}{%
+\section{Check denoising stats}\label{check-denoising-stats}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{$ }\BuiltInTok{cd}\NormalTok{ DADA2_denoising_output}
+
+\NormalTok{$ }\ExtensionTok{qiime}\NormalTok{ metadata tabulate \textbackslash{}}
+\NormalTok{--m-input-file denoising_stats.qza \textbackslash{}}
+\NormalTok{--o-visualization denoising_stats.qzv \textbackslash{}}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{get-featuretable-frequency-and-featuredata-sequences}{%
+\section{Get FeatureTable {[}frequency{]} and FeatureData {[}sequences{]}}\label{get-featuretable-frequency-and-featuredata-sequences}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{$ }\ExtensionTok{qiime}\NormalTok{ feature-table summarize \textbackslash{}}
+\NormalTok{  --i-table table.qza \textbackslash{}}
+\NormalTok{  --o-visualization table.qzv \textbackslash{}}
+\NormalTok{  --m-sample-metadata-file ../metadata.txt }
+
+\NormalTok{$ }\ExtensionTok{qiime}\NormalTok{ feature-table tabulate-seqs \textbackslash{}}
+\NormalTok{  --i-data representative_sequences.qza \textbackslash{}}
+\NormalTok{  --o-visualization representative_sequences.qzv}
+\end{Highlighting}
+\end{Shaded}
+
+Note: min freq: 20,718.0 reads
+
+\hypertarget{train-classifier-for-doing-taxonomy}{%
+\section{Train Classifier (for doing taxonomy)}\label{train-classifier-for-doing-taxonomy}}
+
+First up, we gotta import a the greengenes database stuff into qiime as qiime artifacts.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{$ }\FunctionTok{mkdir}\NormalTok{ classifier}
+\NormalTok{$ }\BuiltInTok{cd}\NormalTok{ classifier}
+
+\CommentTok{# download green genes 13_8}
+\NormalTok{$ }\FunctionTok{wget}\NormalTok{ ftp://greengenes.microbio.me/greengenes_release/gg_13_5/gg_13_8_otus.tar.gz}
+\NormalTok{$ }\FunctionTok{gunzip}\NormalTok{ gg_13_8_otus.tar.gz}
+\NormalTok{$ }\FunctionTok{tar}\NormalTok{ -xvf gg_13_8_otus.tar}
+\NormalTok{$ }\FunctionTok{rm}\NormalTok{ gg_13_8_otus.tar}
+
+ \CommentTok{# the sequences from greengenes}
+\NormalTok{$ }\ExtensionTok{qiime}\NormalTok{ tools import \textbackslash{}}
+\NormalTok{--type }\StringTok{'FeatureData[Sequence]'}\NormalTok{ \textbackslash{}}
+\NormalTok{--input-path gg_13_8_otus/rep_set/99_otus.fasta \textbackslash{}}
+\NormalTok{--output-path 99_otus.qza}
+
+\CommentTok{# The taxonomy strings from greengenes}
+\NormalTok{$ }\ExtensionTok{qiime}\NormalTok{ tools import \textbackslash{}}
+\NormalTok{--type }\StringTok{'FeatureData[Taxonomy]'}\NormalTok{ \textbackslash{}}
+\NormalTok{--input-format HeaderlessTSVTaxonomyFormat \textbackslash{}}
+\NormalTok{--input-path gg_13_8_otus/taxonomy/99_otu_taxonomy.txt \textbackslash{}}
+\NormalTok{--output-path 99_otus_16S_taxonomy.qza}
+\end{Highlighting}
+\end{Shaded}
+
+Extract reads from the relevant region (V3-V5) out of the ref database
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{$ }\ExtensionTok{qiime}\NormalTok{ feature-classifier extract-reads \textbackslash{}}
+\NormalTok{--i-sequences 99_otus.qza \textbackslash{}}
+\NormalTok{--p-f-primer CCTACGGGNGGCWGCAG  \textbackslash{}}
+\NormalTok{--p-r-primer GACTACHVGGGTATCTAATCC   \textbackslash{}}
+\NormalTok{--p-min-length 300 \textbackslash{}}
+\NormalTok{--p-max-length 600 \textbackslash{}}
+\NormalTok{--o-reads ref_seqs.qza \textbackslash{}}
+\NormalTok{--verbose \textbackslash{}}
+\OperatorTok{&>}\NormalTok{ 16S_training.log}
+\end{Highlighting}
+\end{Shaded}
+
+Now, train the classifier on this region. I.e use this \texttt{ref\_seqs.qza} qiime artifact as the input for feature-classifier.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{$ }\ExtensionTok{qiime}\NormalTok{ feature-classifier fit-classifier-naive-bayes \textbackslash{}}
+\NormalTok{--i-reference-reads ref_seqs.qza \textbackslash{}}
+\NormalTok{--i-reference-taxonomy 99_otus_16S_taxonomy.qza \textbackslash{}}
+\NormalTok{--o-classifier classifier_16S.qza \textbackslash{}}
+\NormalTok{--verbose \textbackslash{}}
+\OperatorTok{&>}\NormalTok{ 16S_classifier.log}
+\end{Highlighting}
+\end{Shaded}
+
+The output of this is our classifier, which I've called \texttt{classifier\_16S.qza}, is what will be used in the next step.
+
+\hypertarget{classify-rep-seqs}{%
+\section{Classify rep seqs}\label{classify-rep-seqs}}
+
+So now we've got the classifier, we can use it to classify our representative seqs (rep-seqs.qza), which I then tabulated and visualised:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{$ }\BuiltInTok{cd}\NormalTok{ ..}
+\NormalTok{$ }\FunctionTok{mkdir}\NormalTok{ taxonomy}
+
+\NormalTok{$ }\ExtensionTok{qiime}\NormalTok{ feature-classifier classify-sklearn \textbackslash{}}
+\NormalTok{--i-classifier classifier/classifier_16S.qza \textbackslash{}}
+\NormalTok{--i-reads DADA2_denoising_output/representative_sequences.qza \textbackslash{}}
+\NormalTok{--o-classification taxonomy/classified_rep_seqs.qza}
+
+\CommentTok{# Tabulate the features, their taxonomy and the confidence of taxonomy assignment}
+\NormalTok{$ }\BuiltInTok{cd}\NormalTok{ taxonomy}
+
+\NormalTok{$ }\ExtensionTok{qiime}\NormalTok{ metadata tabulate \textbackslash{}}
+\NormalTok{--m-input-file classified_rep_seqs.qza \textbackslash{}}
+\NormalTok{--o-visualization classified_rep_seqs.qzv}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{create-a-phylogenetic-tree}{%
+\section{Create a phylogenetic tree}\label{create-a-phylogenetic-tree}}
+
+Note that this only needs the rep seqs (not the classified rep seqs)
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{$ }\BuiltInTok{cd}\NormalTok{ ..}
+
+\NormalTok{$ }\ExtensionTok{qiime}\NormalTok{ phylogeny align-to-tree-mafft-fasttree \textbackslash{}}
+\NormalTok{--i-sequences DADA2_denoising_output/representative_sequences.qza \textbackslash{}}
+\NormalTok{--output-dir phylogenetic_tree \textbackslash{}}
+\NormalTok{--p-n-threads 8 \textbackslash{}}
+\NormalTok{--verbose \textbackslash{}}
+\OperatorTok{&>}\NormalTok{ phylogenetic_tree_generation.log}
+\end{Highlighting}
+\end{Shaded}
+
+Note: it's the rooted\_tree.qza file which will be used in downstream analyses.
+
+Now on to the fun stuff - taxonomy and diversity analyses!
+
+\hypertarget{taxonomic-analysis}{%
+\chapter{Taxonomic Analysis}\label{taxonomic-analysis}}
+
+\hypertarget{taxonomic-analysis---taxa-barplots}{%
+\section{Taxonomic analysis - taxa barplots}\label{taxonomic-analysis---taxa-barplots}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{$ }\ExtensionTok{qiime}\NormalTok{ taxa barplot \textbackslash{}}
+\NormalTok{--i-table DADA2_denoising_output/table.qza \textbackslash{}}
+\NormalTok{--i-taxonomy taxonomy/classified_rep_seqs.qza \textbackslash{}}
+\NormalTok{--m-metadata-file metadata.txt \textbackslash{}}
+\NormalTok{--o-visualization taxonomy/taxa_barplots.qzv}
+\end{Highlighting}
+\end{Shaded}
+
+This provides taxonomic barplots which I can then download as SVG (also allows for download as csv, which act as input for LefSe). Downloaded csvs and have placed in fig/taxa\_barplots/ folder.
+
+\hypertarget{generate-heatmap}{%
+\section{Generate heatmap}\label{generate-heatmap}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{$ }\FunctionTok{mkdir}\NormalTok{ collapsed-tables}
+\NormalTok{$ }\FunctionTok{mkdir}\NormalTok{ heatmaps}
+
+\NormalTok{$ }\ExtensionTok{qiime}\NormalTok{ taxa collapse \textbackslash{}}
+\NormalTok{--i-table DADA2_denoising_output/table.qza \textbackslash{}}
+\NormalTok{--i-taxonomy taxonomy/classified_rep_seqs.qza \textbackslash{}}
+\NormalTok{--p-level 7 \textbackslash{}}
+\NormalTok{--o-collapsed-table collapsed-tables/collapsed-table-l7.qza}
+
+\NormalTok{$ }\ExtensionTok{qiime}\NormalTok{ feature-table heatmap \textbackslash{}}
+\NormalTok{--i-table collapsed-tables/collapsed-table-l7.qza \textbackslash{}}
+\NormalTok{--m-sample-metadata-file metadata.txt \textbackslash{}}
+\NormalTok{--m-sample-metadata-column treatment \textbackslash{}}
+\NormalTok{--o-visualization heatmaps/heatmap-l7.qzv}
+
+\CommentTok{# output heatmap as png/svg}
+\NormalTok{$ }\ExtensionTok{qiime}\NormalTok{ tools export \textbackslash{}}
+\NormalTok{--input-path heatmap-l7.qzv }\DataTypeTok{\textbackslash{} }
+\ExtensionTok{--output-path}\NormalTok{ heatmap-l7}
+\end{Highlighting}
+\end{Shaded}
+
+Note: As multiple people have noted on the qiime forums, loading the qzv into qiime2view and then trying to export the heatmap figure doesn't seem to work (at least I've never got it to work). So that's why I add in that export command at the end.
+
+\hypertarget{alpha-and-beta-diversity-analyses}{%
+\chapter{Alpha and Beta Diversity Analyses}\label{alpha-and-beta-diversity-analyses}}
+
+NOte: Use sampling depth of 20718 (including all samples)
+
+\hypertarget{alpha-rarefaction-curves}{%
+\section{Alpha Rarefaction Curves}\label{alpha-rarefaction-curves}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{$ }\FunctionTok{mkdir}\NormalTok{ alpha_rarefaction}
+
+\NormalTok{$ }\ExtensionTok{qiime}\NormalTok{ diversity alpha-rarefaction \textbackslash{}}
+\NormalTok{--i-table DADA2_denoising_output/table.qza \textbackslash{}}
+\NormalTok{--i-phylogeny phylogenetic_tree/rooted_tree.qza \textbackslash{}}
+\NormalTok{--p-max-depth 20718 \textbackslash{}}
+\NormalTok{--m-metadata-file metadata.txt \textbackslash{}}
+\NormalTok{--o-visualization alpha_rarefaction/rarefaction_20718.qzv}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{diversity-metrics}{%
+\section{Diversity Metrics}\label{diversity-metrics}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{$ }\ExtensionTok{qiime}\NormalTok{ diversity core-metrics-phylogenetic \textbackslash{}}
+\NormalTok{  --i-phylogeny phylogenetic_tree/rooted_tree.qza \textbackslash{}}
+\NormalTok{  --i-table DADA2_denoising_output/table.qza \textbackslash{}}
+\NormalTok{  --p-sampling-depth 20718  \textbackslash{}}
+\NormalTok{  --m-metadata-file metadata.txt \textbackslash{}}
+\NormalTok{  --output-dir core-metrics-results}
+\end{Highlighting}
+\end{Shaded}
+
+Then I used this script from \href{https://rachaellappan.github.io/VL-QIIME2-analysis/alpha-and-beta-diversity.html}{Rachel Lappan} to iterate the alpha-group-significance plugin.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{for} \ExtensionTok{result}\NormalTok{ in *vector.qza}\KeywordTok{;} \KeywordTok{\textbackslash{}}
+\KeywordTok{do} \KeywordTok{\textbackslash{}}
+\VariableTok{outname=$\{result/}\NormalTok{_vector.qza}\VariableTok{/}\NormalTok{_group_significance.qzv}\VariableTok{\}}\NormalTok{; }\KeywordTok{\textbackslash{}}
+\ExtensionTok{qiime}\NormalTok{ diversity alpha-group-significance \textbackslash{}}
+\NormalTok{--i-alpha-diversity }\VariableTok{$result}\NormalTok{ \textbackslash{}}
+\NormalTok{--m-metadata-file ../metadata.txt \textbackslash{}}
+\NormalTok{--o-visualization }\VariableTok{$outname}\KeywordTok{;} \KeywordTok{\textbackslash{}}
+\KeywordTok{done}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{beta-signficance-metrics}{%
+\section{Beta signficance metrics}\label{beta-signficance-metrics}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{$ }\ExtensionTok{qiime}\NormalTok{ diversity beta-group-significance \textbackslash{}}
+\NormalTok{--i-distance-matrix bray_curtis_distance_matrix.qza \textbackslash{}}
+\NormalTok{--m-metadata-file ../metadata.txt \textbackslash{}}
+\NormalTok{--m-metadata-column treatment \textbackslash{}}
+\NormalTok{--o-visualization bray_curtis_distance_matrix.qzv}
+
+\NormalTok{$ }\ExtensionTok{qiime}\NormalTok{ diversity beta-group-significance \textbackslash{}}
+\NormalTok{--i-distance-matrix unweighted_unifrac_distance_matrix.qza \textbackslash{}}
+\NormalTok{--m-metadata-file ../metadata.txt \textbackslash{}}
+\NormalTok{--m-metadata-column treatment \textbackslash{}}
+\NormalTok{--o-visualization unweighted_unifrac_distance_matrix.qzv}
+
+\NormalTok{$ }\ExtensionTok{qiime}\NormalTok{ diversity beta-group-significance \textbackslash{}}
+\NormalTok{--i-distance-matrix weighted_unifrac_distance_matrix.qza \textbackslash{}}
+\NormalTok{--m-metadata-file ../metadata.txt \textbackslash{}}
+\NormalTok{--m-metadata-column treatment \textbackslash{}}
+\NormalTok{--o-visualization weighted_unifrac_distance_matrix.qzv}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{picrust2}{%
+\chapter{Picrust2}\label{picrust2}}
+
+Firstly, prepare files for input into picrust2. Note: Will need to be in qiime conda environment for qiime commands to work.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{$ }\FunctionTok{mkdir}\NormalTok{ picrust2}
+
+\CommentTok{# export table.qza -> outputs as feature-table.biom}
+\NormalTok{$ }\ExtensionTok{qiime}\NormalTok{ tools export  \textbackslash{}}
+\NormalTok{--input-path DADA2_denoising_output/table.qza \textbackslash{}}
+\NormalTok{--output-path picrust2}
+
+\CommentTok{# export rep seqs sqz -> outputs as dna-sequences.fasta file.}
+\NormalTok{$ }\ExtensionTok{qiime}\NormalTok{ tools export  \textbackslash{}}
+\NormalTok{--input-path DADA2_denoising_output/representative_sequences.qza \textbackslash{}}
+\NormalTok{--output-path picrust2}
+\end{Highlighting}
+\end{Shaded}
+
+Install/activate picrust
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{$ }\ExtensionTok{conda}\NormalTok{ create -n picrust2 -c bioconda -c conda-forge picrust2=2.3.0_b}
+\NormalTok{$ }\ExtensionTok{conda}\NormalTok{ activate picrust2}
+\end{Highlighting}
+\end{Shaded}
+
+Now run picrust, full pipeline:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+
+\NormalTok{$ }\BuiltInTok{cd}\NormalTok{ picrust2}
+
+\NormalTok{$ }\ExtensionTok{picrust2_pipeline.py}\NormalTok{ -s dna-sequences.fasta -i feature-table.biom -o picrust2_out_pipeline -p 1}
+
+\CommentTok{# add descriptions (make easier in STAMP)}
+\NormalTok{$ }\BuiltInTok{cd}\NormalTok{ picrust2_out_pipeline/}
+
+\NormalTok{$ }\ExtensionTok{add_descriptions.py}\NormalTok{ -i EC_metagenome_out/pred_metagenome_unstrat.tsv.gz -m EC \textbackslash{}}
+\NormalTok{                    -o EC_metagenome_out/pred_metagenome_unstrat_descrip.tsv.gz}
+
+\NormalTok{$ }\ExtensionTok{add_descriptions.py}\NormalTok{ -i pathways_out/path_abun_unstrat.tsv.gz -m METACYC \textbackslash{}}
+\NormalTok{                    -o pathways_out/path_abun_unstrat_descrip.tsv.gz}
+\end{Highlighting}
+\end{Shaded}
+
+These files are now ready for download and visualsation in STAMP.
+
+\end{document}
