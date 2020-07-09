@@ -29,10 +29,10 @@ $ qiime dada2 denoise-paired \
 &> DADA2_denoising.log
 ```
 
-So now we have a folder, `DADA2_denoisng_output` with following items in there:
-- denoising_stats.qza 
-- representative_sequences.qza
-- table.qza
+So now we have a folder, `DADA2_denoisng_output` with following items in there:  
+- denoising_stats.qza  
+- representative_sequences.qza  
+- table.qza  
 
 ## Check denoising stats
 
