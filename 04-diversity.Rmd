@@ -2,7 +2,7 @@
 
 NOte: Use sampling depth of 20718 (including all samples)
 
-Alhpa Rarefaction Curves
+## Alpha Rarefaction Curves
 
 ```{bash}
 $ mkdir alpha_rarefaction
@@ -15,8 +15,7 @@ $ qiime diversity alpha-rarefaction \
 --o-visualization alpha_rarefaction/rarefaction_20718.qzv
 ```
 
-
-Diversity Metrics
+## Diversity Metrics
 
 ```{bash}
 $ qiime diversity core-metrics-phylogenetic \
@@ -27,7 +26,7 @@ $ qiime diversity core-metrics-phylogenetic \
   --output-dir core-metrics-results
 ```
 
-Then I used this script from [Rachel Lappan](https://rachaellappan.github.io/VL-QIIME2-analysis/alpha-and-beta-diversity.html) to iterate the alpha-group-significance plugin
+Then I used this script from [Rachel Lappan](https://rachaellappan.github.io/VL-QIIME2-analysis/alpha-and-beta-diversity.html) to iterate the alpha-group-significance plugin.
 
 ```{bash}
 for result in *vector.qza; \
@@ -40,4 +39,24 @@ qiime diversity alpha-group-significance \
 done
 ```
 
+## Beta signficance metrics
 
+```{bash}
+$ qiime diversity beta-group-significance \
+--i-distance-matrix bray_curtis_distance_matrix.qza \
+--m-metadata-file ../metadata.txt \
+--m-metadata-column treatment \
+--o-visualization bray_curtis_distance_matrix.qzv
+
+$ qiime diversity beta-group-significance \
+--i-distance-matrix unweighted_unifrac_distance_matrix.qza \
+--m-metadata-file ../metadata.txt \
+--m-metadata-column treatment \
+--o-visualization unweighted_unifrac_distance_matrix.qzv
+
+$ qiime diversity beta-group-significance \
+--i-distance-matrix weighted_unifrac_distance_matrix.qza \
+--m-metadata-file ../metadata.txt \
+--m-metadata-column treatment \
+--o-visualization weighted_unifrac_distance_matrix.qzv
+```

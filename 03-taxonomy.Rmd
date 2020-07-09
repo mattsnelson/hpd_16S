@@ -1,6 +1,6 @@
 # Taxonomic Analysis
 
-Taxonomic analysis - taxa barplots
+## Taxonomic analysis - taxa barplots
 ```{bash}
 $ qiime taxa barplot \
 --i-table DADA2_denoising_output/table.qza \
@@ -9,12 +9,9 @@ $ qiime taxa barplot \
 --o-visualization taxonomy/taxa_barplots.qzv
 ```
 
+This provides taxonomic barplots which I can then download as SVG (also allows for download as csv, which act as input for LefSe). Downloaded csvs and have placed in fig/taxa_barplots/ folder.
 
-This provides taxonomic barplots which I can then download as SVG (also allows for download as csv..which means I can then do as a LefSE plot)
-Downloaded csvs and have placed in fig/taxa_barplots/ folder
-
-
-Generate heatmap 
+## Generate heatmap 
 
 ```{bash}
 $ mkdir collapsed-tables
@@ -32,8 +29,10 @@ $ qiime feature-table heatmap \
 --m-sample-metadata-column treatment \
 --o-visualization heatmaps/heatmap-l7.qzv
 
+# output heatmap as png/svg
+$ qiime tools export \
+--input-path heatmap-l7.qzv \ 
+--output-path heatmap-l7
 ```
 
-
-
-
+Note: As multiple people have noted on the qiime forums, loading the qzv into qiime2view and then trying to export the heatmap figure doesn't seem to work (at least I've never got it to work). So that's why I add in that export command at the end.

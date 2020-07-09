@@ -1,59 +1,18 @@
-# Setup and QC {#intro}
-
-You can label chapter and section titles using `{#label}` after them, e.g., we can reference Chapter \@ref(intro). If you do not manually label them, there will be automatic labels anyway, e.g., Chapter \@ref(methods).
-
-Figures and tables with captions will be placed in `figure` and `table` environments, respectively.
-
-STARTS here my notes:
-
-Big shoutout and credit to Rachel Lappns guide here -which kinda inspired me to do this thing too: https://rachaellappan.github.io/VL-QIIME2-analysis/pre-processing-of-sequence-reads.html
-
-
+# Setup and QC
 
 ## Install QIIME and acitvate conda environment
 
 This anlaysis was coducted using QIIME 2020.2. First step, download the yml file and then use it to create a conda environment for the install. 
 
 ```{bash}
-wget https://data.qiime2.org/distro/core/qiime2-2020.2-py36-linux-conda.yml
-conda env create -n qiime2-2020.2 --file qiime2-2020.2-py36-linux-conda.yml
+$ wget https://data.qiime2.org/distro/core/qiime2-2020.2-py36-linux-conda.yml
+$ conda env create -n qiime2-2020.2 --file qiime2-2020.2-py36-linux-conda.yml
 ```
 
 Then activate the conda environment  
 
 ```{bash}
-conda activate qiime2-2020.2
-```
-
-## Folder structure
-
-From the squenicng provider, we have paired end reads (R1 and R2) provided as gzipped fastq files. These are in the `data-raw` folder:
-```{bash}
-── data-raw
-│   ├── J108_S100_L001_R1_001.fastq.gz
-│   ├── J108_S100_L001_R2_001.fastq.gz
-│   ├── J108_S101_L001_R1_001.fastq.gz
-│   ├── J108_S101_L001_R2_001.fastq.gz
-│   ├── J108_S102_L001_R1_001.fastq.gz
-│   ├── J108_S102_L001_R2_001.fastq.gz
-│   ├── J108_S103_L001_R1_001.fastq.gz
-│   ├── J108_S103_L001_R2_001.fastq.gz
-│   ├── J108_S104_L001_R1_001.fastq.gz
-│   ├── J108_S104_L001_R2_001.fastq.gz
-│   ├── J108_S111_L001_R1_001.fastq.gz
-│   ├── J108_S111_L001_R2_001.fastq.gz
-│   ├── J108_S112_L001_R1_001.fastq.gz
-│   ├── J108_S112_L001_R2_001.fastq.gz
-│   ├── J108_S113_L001_R1_001.fastq.gz
-│   ├── J108_S113_L001_R2_001.fastq.gz
-│   ├── J108_S114_L001_R1_001.fastq.gz
-│   ├── J108_S114_L001_R2_001.fastq.gz
-│   ├── J108_S115_L001_R1_001.fastq.gz
-│   ├── J108_S115_L001_R2_001.fastq.gz
-│   ├── J108_S116_L001_R1_001.fastq.gz
-│   ├── J108_S116_L001_R2_001.fastq.gz
-│   ├── J108_S99_L001_R1_001.fastq.gz
-│   └── J108_S99_L001_R2_001.fastq.gz
+$ conda activate qiime2-2020.2
 ```
 
 ## Quality Check (FastQC)
@@ -61,14 +20,15 @@ From the squenicng provider, we have paired end reads (R1 and R2) provided as gz
 Run fastqc. Note that these are gzipped fastqc files, but fastqc still works.
 
 ```{bash}
-fastqc data-raw/*.fastq.gz
+$ fastqc data-raw/*.fastq.gz
 ```
+
 Running fastqc generates a fastqc.zip file and fastqc.html per fastq file. Move the fastqc generated files into a `results/fastqc` folder.
 
 ```{bash}
-mkdir results/
-mkdir results/fastqc
-mv data-raw/*fastqc* results/fastqc/
+$ mkdir results/
+$ mkdir results/fastqc
+$ mv data-raw/*fastqc* results/fastqc/
 ```
 
 It's also handy to run mutliQC as this allows to look at quality of all samples at once (rather than one at a time with fastQC reports)
@@ -76,34 +36,18 @@ It's also handy to run mutliQC as this allows to look at quality of all samples 
 First up, install multiQC (if not already installed)
 
 ```{bash}
-conda install -c bioconda -c conda-forge multiqc
+$ conda install -c bioconda -c conda-forge multiqc
 ```
 
 Then run multiqc on the `results/fastqc` folder.
 
 ```{bash}
-mkdir results/multiqc
-multiqc results/fastqc/* -o results/multiqc/
+$ mkdir results/multiqc
+$ multiqc results/fastqc/* -o results/multiqc/
 ```
 
-Note: So you can generate fastqc reports for individual files as part of the daad2 workflow (which we'll do below) - the benefit of this workflow is that we get a multiqc report where we can see all the samples at once. Benefit here is if there's one real stinker you'll be able to see it which you might miss if looking at individual fastqc reports.
+Note: FastQC generates fastqc reports for individual files, the benefit of using mutliqc is that we get a report where we can see all the samples at once. Benefit here is if there's one real stinker you'll be able to see it which you might miss if looking at individual fastqc reports. In the plot below the red are all the reverse reads, the quality of the reverse reads tends to always drop off sooner than the forward reads.
 
-#TODO add in the multiqc output here as a pic methinks - make a note how R reads are always gonna be worse.
+![multiqc results](figs/fastqc_per_base_sequence_quality_plot.png)
 
-Based on multiQC report: will choose limits of F 260 bp and R : 215 bp
-
-
-
-
-
-
-Reference a figure by its code chunk label with the `fig:` prefix, e.g., see Figure \@ref(fig:nice-fig). Similarly, you can reference tables generated from `knitr::kable()`, e.g., see Table \@ref(tab:nice-tab).
-
-```{r nice-tab, tidy=FALSE}
-knitr::kable(
-  head(iris, 20), caption = 'Here is a nice table!',
-  booktabs = TRUE
-)
-```
-
-You can write citations, too. For example, we are using the **bookdown** package [@R-bookdown] in this sample book, which was built on top of R Markdown and **knitr** [@xie2015].
+Based on the multiQC report: will choose limits of F 260 bp and R : 215 bp

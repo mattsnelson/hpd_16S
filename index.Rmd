@@ -1,13 +1,22 @@
 --- 
-title: "16S analysis - High protein diet study"
+title: "High Protein Diet Microbiome Analysis"
 author: "Matthew Snelson"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
-output: bookdown::gitbook
+output:
+  html_document:
+    toc: true
+    toc_depth: 1
 documentclass: book
-bibliography: [book.bib, packages.bib]
-biblio-style: apalike
 link-citations: yes
 github-repo: mattsnelson/hpd_16S
 description: "This is the workflow for 16S analysis for the high protein diet study"
+
 ---
+```{r include=FALSE}
+knitr::opts_chunk$set(eval = FALSE)
+```
+
+# Intro
+
+This is the code for the microbiome analysis associated with this [paper - #TODO add link when published](). The inspiration for documenting this analysis using bookdown came from Rachel Lappan - I would highly recommend checking out her analysis [here](https://rachaellappan.github.io/VL-QIIME2-analysis/pre-processing-of-sequence-reads.html).

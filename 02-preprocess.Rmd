@@ -1,19 +1,23 @@
 # Pre-processing Sequence Reads
 
-These sequences are named like this: `J108_S100_L001_R1_001.fastq.gz`. importing into qiime has a little sad caue all of them start with J108..therefore I manually renamed them with their sample ID S2147, S2148, etc in place fo the J108.
+## Import data
 
 First up gotta import reads into a qiime artifact (called here `input-data-casava`)
 
 ```{bash}
-qiime tools import --type 'SampleData[PairedEndSequencesWithQuality]' --input-path data-raw/ --input-format CasavaOneEightSingleLanePerSampleDirFmt --output-path input-data-casava.qza
+$ qiime tools import \
+--type 'SampleData[PairedEndSequencesWithQuality]' \
+--input-path data-raw/ \
+--input-format CasavaOneEightSingleLanePerSampleDirFmt \
+--output-path input-data-casava.qza
 ```
 
-# Denoise with dada2
+## Denoise with dada2
 
-This step takes a while may want to setup within a tmux session if running on nectar cloud. Note I use a trim-left parameter of 15 on both the forward and reverse reads to deal with the amplicon primers (as seems to work better than using cut-adapt).
+This step takes a while. so may want to setup within a tmux session if running on nectar cloud. Note I use a trim-left parameter of 15 on both the forward and reverse reads to deal with the amplicon primers (as seems to work better than using cut-adapt).
 
 ```{bash}
-qiime dada2 denoise-paired \
+$ qiime dada2 denoise-paired \
 --p-n-threads 8 \
 --i-demultiplexed-seqs input-data-casava.qza \
 --p-trim-left-f 15 \
@@ -30,10 +34,12 @@ So now we have a folder, `DADA2_denoisng_output` with following items in there:
 - representative_sequences.qza
 - table.qza
 
-## Check densoing stats
+## Check denoising stats
+
 ```{bash}
-cd DADA2_denoisng_output
-qiime metadata tabulate \
+$ cd DADA2_denoising_output
+
+$ qiime metadata tabulate \
 --m-input-file denoising_stats.qza \
 --o-visualization denoising_stats.qzv \
 ```
@@ -52,7 +58,6 @@ $ qiime feature-table tabulate-seqs \
 ```
 
 Note: min freq: 20,718.0 reads
-
 
 ## Train Classifier (for doing taxonomy)
 
@@ -110,7 +115,7 @@ $ qiime feature-classifier fit-classifier-naive-bayes \
 
 The output of this is our classifier, which I’ve called `classifier_16S.qza`, is what will be used in the next step.
 
-Classify rep seqs 
+## Classify rep seqs 
 So now we’ve got the classifier, we can use it to classify our representative seqs (rep-seqs.qza), which I then tabulated and visualised:
 
 ```{bash}
@@ -130,7 +135,7 @@ $ qiime metadata tabulate \
 --o-visualization classified_rep_seqs.qzv
 ```
 
-# Create a phylogenetic tree
+## Create a phylogenetic tree
 
 Note that this only needs the rep seqs (not the classified rep seqs)
 

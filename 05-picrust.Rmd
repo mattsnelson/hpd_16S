@@ -1,0 +1,43 @@
+# Picrust2
+
+Firstly, prepare files for input into picrust2. Note: Will need to be in qiime conda environment for qiime commands to work.  
+
+```{bash}
+$ mkdir picrust2
+
+# export table.qza -> outputs as feature-table.biom
+$ qiime tools export  \
+--input-path DADA2_denoising_output/table.qza \
+--output-path picrust2
+
+# export rep seqs sqz -> outputs as dna-sequences.fasta file.
+$ qiime tools export  \
+--input-path DADA2_denoising_output/representative_sequences.qza \
+--output-path picrust2
+```
+
+Install/activate picrust
+```{bash}
+$ conda create -n picrust2 -c bioconda -c conda-forge picrust2=2.3.0_b
+$ conda activate picrust2
+```
+
+Now run picrust, full pipeline:
+
+```{bash}
+
+$ cd picrust2
+
+$ picrust2_pipeline.py -s dna-sequences.fasta -i feature-table.biom -o picrust2_out_pipeline -p 1
+
+# add descriptions (make easier in STAMP)
+$ cd picrust2_out_pipeline/
+
+$ add_descriptions.py -i EC_metagenome_out/pred_metagenome_unstrat.tsv.gz -m EC \
+                    -o EC_metagenome_out/pred_metagenome_unstrat_descrip.tsv.gz
+
+$ add_descriptions.py -i pathways_out/path_abun_unstrat.tsv.gz -m METACYC \
+                    -o pathways_out/path_abun_unstrat_descrip.tsv.gz
+```
+
+These files are now ready for download and visualsation in STAMP.
