@@ -19,4 +19,4 @@ knitr::opts_chunk$set(eval = FALSE)
 
 # Intro
 
-This is the code for the microbiome analysis associated with this [paper - #TODO add link when published](). The inspiration for documenting this analysis using bookdown came from Rachel Lappan - I would highly recommend checking out her analysis [here](https://rachaellappan.github.io/VL-QIIME2-analysis/pre-processing-of-sequence-reads.html).
+This is the code for the microbiome analysis associated with this [paper](https://pubmed.ncbi.nlm.nih.gov/33547877/). The inspiration for documenting this analysis using bookdown came from Rachel Lappan - I would highly recommend checking out her analysis [here](https://rachaellappan.github.io/VL-QIIME2-analysis/pre-processing-of-sequence-reads.html).

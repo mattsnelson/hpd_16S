@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 4 Taxonomic Analysis | High Protein Diet Microbiome Analysis</title>
   <meta name="description" content="This is the workflow for 16S analysis for the high protein diet study" />
-  <meta name="generator" content="bookdown 0.17 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 4 Taxonomic Analysis | High Protein Diet Microbiome Analysis" />
   <meta property="og:type" content="book" />
@@ -24,7 +24,7 @@
 <meta name="author" content="Matthew Snelson" />
 
 
-<meta name="date" content="2020-07-09" />
+<meta name="date" content="2022-02-15" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -50,12 +50,15 @@
 
 
 
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 pre.sourceCode { margin: 0; }
@@ -64,14 +67,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -80,9 +85,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -114,6 +119,7 @@ code span.va { color: #19177c; } /* Variable */
 code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
+
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -179,34 +185,34 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1><span class="header-section-number">Chapter 4</span> Taxonomic Analysis</h1>
 <div id="taxonomic-analysis---taxa-barplots" class="section level2">
 <h2><span class="header-section-number">4.1</span> Taxonomic analysis - taxa barplots</h2>
-<div class="sourceCode" id="cb16"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb16-1" data-line-number="1">$ <span class="ex">qiime</span> taxa barplot \</a>
-<a class="sourceLine" id="cb16-2" data-line-number="2">--i-table DADA2_denoising_output/table.qza \</a>
-<a class="sourceLine" id="cb16-3" data-line-number="3">--i-taxonomy taxonomy/classified_rep_seqs.qza \</a>
-<a class="sourceLine" id="cb16-4" data-line-number="4">--m-metadata-file metadata.txt \</a>
-<a class="sourceLine" id="cb16-5" data-line-number="5">--o-visualization taxonomy/taxa_barplots.qzv</a></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb16-1"><a href="taxonomic-analysis.html#cb16-1"></a>$ <span class="ex">qiime</span> taxa barplot \</span>
+<span id="cb16-2"><a href="taxonomic-analysis.html#cb16-2"></a>--i-table DADA2_denoising_output/table.qza \</span>
+<span id="cb16-3"><a href="taxonomic-analysis.html#cb16-3"></a>--i-taxonomy taxonomy/classified_rep_seqs.qza \</span>
+<span id="cb16-4"><a href="taxonomic-analysis.html#cb16-4"></a>--m-metadata-file metadata.txt \</span>
+<span id="cb16-5"><a href="taxonomic-analysis.html#cb16-5"></a>--o-visualization taxonomy/taxa_barplots.qzv</span></code></pre></div>
 <p>This provides taxonomic barplots which I can then download as SVG (also allows for download as csv, which act as input for LefSe). Downloaded csvs and have placed in fig/taxa_barplots/ folder.</p>
 </div>
 <div id="generate-heatmap" class="section level2">
 <h2><span class="header-section-number">4.2</span> Generate heatmap</h2>
-<div class="sourceCode" id="cb17"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb17-1" data-line-number="1">$ <span class="fu">mkdir</span> collapsed-tables</a>
-<a class="sourceLine" id="cb17-2" data-line-number="2">$ <span class="fu">mkdir</span> heatmaps</a>
-<a class="sourceLine" id="cb17-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb17-4" data-line-number="4">$ <span class="ex">qiime</span> taxa collapse \</a>
-<a class="sourceLine" id="cb17-5" data-line-number="5">--i-table DADA2_denoising_output/table.qza \</a>
-<a class="sourceLine" id="cb17-6" data-line-number="6">--i-taxonomy taxonomy/classified_rep_seqs.qza \</a>
-<a class="sourceLine" id="cb17-7" data-line-number="7">--p-level 7 \</a>
-<a class="sourceLine" id="cb17-8" data-line-number="8">--o-collapsed-table collapsed-tables/collapsed-table-l7.qza</a>
-<a class="sourceLine" id="cb17-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb17-10" data-line-number="10">$ <span class="ex">qiime</span> feature-table heatmap \</a>
-<a class="sourceLine" id="cb17-11" data-line-number="11">--i-table collapsed-tables/collapsed-table-l7.qza \</a>
-<a class="sourceLine" id="cb17-12" data-line-number="12">--m-sample-metadata-file metadata.txt \</a>
-<a class="sourceLine" id="cb17-13" data-line-number="13">--m-sample-metadata-column treatment \</a>
-<a class="sourceLine" id="cb17-14" data-line-number="14">--o-visualization heatmaps/heatmap-l7.qzv</a>
-<a class="sourceLine" id="cb17-15" data-line-number="15"></a>
-<a class="sourceLine" id="cb17-16" data-line-number="16"><span class="co"># output heatmap as png/svg</span></a>
-<a class="sourceLine" id="cb17-17" data-line-number="17">$ <span class="ex">qiime</span> tools export \</a>
-<a class="sourceLine" id="cb17-18" data-line-number="18">--input-path heatmap-l7.qzv <span class="dt">\ </span></a>
-<a class="sourceLine" id="cb17-19" data-line-number="19"><span class="ex">--output-path</span> heatmap-l7</a></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb17-1"><a href="taxonomic-analysis.html#cb17-1"></a>$ <span class="fu">mkdir</span> collapsed-tables</span>
+<span id="cb17-2"><a href="taxonomic-analysis.html#cb17-2"></a>$ <span class="fu">mkdir</span> heatmaps</span>
+<span id="cb17-3"><a href="taxonomic-analysis.html#cb17-3"></a></span>
+<span id="cb17-4"><a href="taxonomic-analysis.html#cb17-4"></a>$ <span class="ex">qiime</span> taxa collapse \</span>
+<span id="cb17-5"><a href="taxonomic-analysis.html#cb17-5"></a>--i-table DADA2_denoising_output/table.qza \</span>
+<span id="cb17-6"><a href="taxonomic-analysis.html#cb17-6"></a>--i-taxonomy taxonomy/classified_rep_seqs.qza \</span>
+<span id="cb17-7"><a href="taxonomic-analysis.html#cb17-7"></a>--p-level 7 \</span>
+<span id="cb17-8"><a href="taxonomic-analysis.html#cb17-8"></a>--o-collapsed-table collapsed-tables/collapsed-table-l7.qza</span>
+<span id="cb17-9"><a href="taxonomic-analysis.html#cb17-9"></a></span>
+<span id="cb17-10"><a href="taxonomic-analysis.html#cb17-10"></a>$ <span class="ex">qiime</span> feature-table heatmap \</span>
+<span id="cb17-11"><a href="taxonomic-analysis.html#cb17-11"></a>--i-table collapsed-tables/collapsed-table-l7.qza \</span>
+<span id="cb17-12"><a href="taxonomic-analysis.html#cb17-12"></a>--m-sample-metadata-file metadata.txt \</span>
+<span id="cb17-13"><a href="taxonomic-analysis.html#cb17-13"></a>--m-sample-metadata-column treatment \</span>
+<span id="cb17-14"><a href="taxonomic-analysis.html#cb17-14"></a>--o-visualization heatmaps/heatmap-l7.qzv</span>
+<span id="cb17-15"><a href="taxonomic-analysis.html#cb17-15"></a></span>
+<span id="cb17-16"><a href="taxonomic-analysis.html#cb17-16"></a><span class="co"># output heatmap as png/svg</span></span>
+<span id="cb17-17"><a href="taxonomic-analysis.html#cb17-17"></a>$ <span class="ex">qiime</span> tools export \</span>
+<span id="cb17-18"><a href="taxonomic-analysis.html#cb17-18"></a>--input-path heatmap-l7.qzv <span class="dt">\ </span></span>
+<span id="cb17-19"><a href="taxonomic-analysis.html#cb17-19"></a><span class="ex">--output-path</span> heatmap-l7</span></code></pre></div>
 <p>Note: As multiple people have noted on the qiime forums, loading the qzv into qiime2view and then trying to export the heatmap figure doesn’t seem to work (at least I’ve never got it to work). So that’s why I add in that export command at the end.</p>
 
 </div>
@@ -240,6 +246,7 @@ gitbook.start({
 "weibo": false,
 "instapaper": false,
 "vk": false,
+"whatsapp": false,
 "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {

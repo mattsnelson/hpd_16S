@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 3 Pre-processing Sequence Reads | High Protein Diet Microbiome Analysis</title>
   <meta name="description" content="This is the workflow for 16S analysis for the high protein diet study" />
-  <meta name="generator" content="bookdown 0.17 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 3 Pre-processing Sequence Reads | High Protein Diet Microbiome Analysis" />
   <meta property="og:type" content="book" />
@@ -24,7 +24,7 @@
 <meta name="author" content="Matthew Snelson" />
 
 
-<meta name="date" content="2020-07-09" />
+<meta name="date" content="2022-02-15" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -50,12 +50,15 @@
 
 
 
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 pre.sourceCode { margin: 0; }
@@ -64,14 +67,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -80,9 +85,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -114,6 +119,7 @@ code span.va { color: #19177c; } /* Variable */
 code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
+
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -180,25 +186,25 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="import-data" class="section level2">
 <h2><span class="header-section-number">3.1</span> Import data</h2>
 <p>First up gotta import reads into a qiime artifact (called here <code>input-data-casava</code>)</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb7-1" data-line-number="1">$ <span class="ex">qiime</span> tools import \</a>
-<a class="sourceLine" id="cb7-2" data-line-number="2">--type <span class="st">&#39;SampleData[PairedEndSequencesWithQuality]&#39;</span> \</a>
-<a class="sourceLine" id="cb7-3" data-line-number="3">--input-path data-raw/ \</a>
-<a class="sourceLine" id="cb7-4" data-line-number="4">--input-format CasavaOneEightSingleLanePerSampleDirFmt \</a>
-<a class="sourceLine" id="cb7-5" data-line-number="5">--output-path input-data-casava.qza</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="pre-processing-sequence-reads.html#cb7-1"></a>$ <span class="ex">qiime</span> tools import \</span>
+<span id="cb7-2"><a href="pre-processing-sequence-reads.html#cb7-2"></a>--type <span class="st">&#39;SampleData[PairedEndSequencesWithQuality]&#39;</span> \</span>
+<span id="cb7-3"><a href="pre-processing-sequence-reads.html#cb7-3"></a>--input-path data-raw/ \</span>
+<span id="cb7-4"><a href="pre-processing-sequence-reads.html#cb7-4"></a>--input-format CasavaOneEightSingleLanePerSampleDirFmt \</span>
+<span id="cb7-5"><a href="pre-processing-sequence-reads.html#cb7-5"></a>--output-path input-data-casava.qza</span></code></pre></div>
 </div>
 <div id="denoise-with-dada2" class="section level2">
 <h2><span class="header-section-number">3.2</span> Denoise with dada2</h2>
 <p>This step takes a while. so may want to setup within a tmux session if running on nectar cloud. Note I use a trim-left parameter of 15 on both the forward and reverse reads to deal with the amplicon primers (as seems to work better than using cut-adapt).</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb8-1" data-line-number="1">$ <span class="ex">qiime</span> dada2 denoise-paired \</a>
-<a class="sourceLine" id="cb8-2" data-line-number="2">--p-n-threads 8 \</a>
-<a class="sourceLine" id="cb8-3" data-line-number="3">--i-demultiplexed-seqs input-data-casava.qza \</a>
-<a class="sourceLine" id="cb8-4" data-line-number="4">--p-trim-left-f 15 \</a>
-<a class="sourceLine" id="cb8-5" data-line-number="5">--p-trim-left-r 15 \</a>
-<a class="sourceLine" id="cb8-6" data-line-number="6">--p-trunc-len-f 260 \</a>
-<a class="sourceLine" id="cb8-7" data-line-number="7">--p-trunc-len-r 215 \</a>
-<a class="sourceLine" id="cb8-8" data-line-number="8">--output-dir DADA2_denoising_output \</a>
-<a class="sourceLine" id="cb8-9" data-line-number="9">--verbose \</a>
-<a class="sourceLine" id="cb8-10" data-line-number="10"><span class="op">&amp;&gt;</span> DADA2_denoising.log</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="pre-processing-sequence-reads.html#cb8-1"></a>$ <span class="ex">qiime</span> dada2 denoise-paired \</span>
+<span id="cb8-2"><a href="pre-processing-sequence-reads.html#cb8-2"></a>--p-n-threads 8 \</span>
+<span id="cb8-3"><a href="pre-processing-sequence-reads.html#cb8-3"></a>--i-demultiplexed-seqs input-data-casava.qza \</span>
+<span id="cb8-4"><a href="pre-processing-sequence-reads.html#cb8-4"></a>--p-trim-left-f 15 \</span>
+<span id="cb8-5"><a href="pre-processing-sequence-reads.html#cb8-5"></a>--p-trim-left-r 15 \</span>
+<span id="cb8-6"><a href="pre-processing-sequence-reads.html#cb8-6"></a>--p-trunc-len-f 260 \</span>
+<span id="cb8-7"><a href="pre-processing-sequence-reads.html#cb8-7"></a>--p-trunc-len-r 215 \</span>
+<span id="cb8-8"><a href="pre-processing-sequence-reads.html#cb8-8"></a>--output-dir DADA2_denoising_output \</span>
+<span id="cb8-9"><a href="pre-processing-sequence-reads.html#cb8-9"></a>--verbose \</span>
+<span id="cb8-10"><a href="pre-processing-sequence-reads.html#cb8-10"></a><span class="op">&amp;&gt;</span> DADA2_denoising.log</span></code></pre></div>
 <p>So now we have a folder, <code>DADA2_denoisng_output</code> with following items in there:<br />
 - denoising_stats.qza<br />
 - representative_sequences.qza<br />
@@ -206,96 +212,96 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="check-denoising-stats" class="section level2">
 <h2><span class="header-section-number">3.3</span> Check denoising stats</h2>
-<div class="sourceCode" id="cb9"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb9-1" data-line-number="1">$ <span class="bu">cd</span> DADA2_denoising_output</a>
-<a class="sourceLine" id="cb9-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb9-3" data-line-number="3">$ <span class="ex">qiime</span> metadata tabulate \</a>
-<a class="sourceLine" id="cb9-4" data-line-number="4">--m-input-file denoising_stats.qza \</a>
-<a class="sourceLine" id="cb9-5" data-line-number="5">--o-visualization denoising_stats.qzv \</a></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="pre-processing-sequence-reads.html#cb9-1"></a>$ <span class="bu">cd</span> DADA2_denoising_output</span>
+<span id="cb9-2"><a href="pre-processing-sequence-reads.html#cb9-2"></a></span>
+<span id="cb9-3"><a href="pre-processing-sequence-reads.html#cb9-3"></a>$ <span class="ex">qiime</span> metadata tabulate \</span>
+<span id="cb9-4"><a href="pre-processing-sequence-reads.html#cb9-4"></a>--m-input-file denoising_stats.qza \</span>
+<span id="cb9-5"><a href="pre-processing-sequence-reads.html#cb9-5"></a>--o-visualization denoising_stats.qzv \</span></code></pre></div>
 </div>
 <div id="get-featuretable-frequency-and-featuredata-sequences" class="section level2">
 <h2><span class="header-section-number">3.4</span> Get FeatureTable [frequency] and FeatureData [sequences]</h2>
-<div class="sourceCode" id="cb10"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb10-1" data-line-number="1">$ <span class="ex">qiime</span> feature-table summarize \</a>
-<a class="sourceLine" id="cb10-2" data-line-number="2">  --i-table table.qza \</a>
-<a class="sourceLine" id="cb10-3" data-line-number="3">  --o-visualization table.qzv \</a>
-<a class="sourceLine" id="cb10-4" data-line-number="4">  --m-sample-metadata-file ../metadata.txt </a>
-<a class="sourceLine" id="cb10-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb10-6" data-line-number="6">$ <span class="ex">qiime</span> feature-table tabulate-seqs \</a>
-<a class="sourceLine" id="cb10-7" data-line-number="7">  --i-data representative_sequences.qza \</a>
-<a class="sourceLine" id="cb10-8" data-line-number="8">  --o-visualization representative_sequences.qzv</a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="pre-processing-sequence-reads.html#cb10-1"></a>$ <span class="ex">qiime</span> feature-table summarize \</span>
+<span id="cb10-2"><a href="pre-processing-sequence-reads.html#cb10-2"></a>  --i-table table.qza \</span>
+<span id="cb10-3"><a href="pre-processing-sequence-reads.html#cb10-3"></a>  --o-visualization table.qzv \</span>
+<span id="cb10-4"><a href="pre-processing-sequence-reads.html#cb10-4"></a>  --m-sample-metadata-file ../metadata.txt </span>
+<span id="cb10-5"><a href="pre-processing-sequence-reads.html#cb10-5"></a></span>
+<span id="cb10-6"><a href="pre-processing-sequence-reads.html#cb10-6"></a>$ <span class="ex">qiime</span> feature-table tabulate-seqs \</span>
+<span id="cb10-7"><a href="pre-processing-sequence-reads.html#cb10-7"></a>  --i-data representative_sequences.qza \</span>
+<span id="cb10-8"><a href="pre-processing-sequence-reads.html#cb10-8"></a>  --o-visualization representative_sequences.qzv</span></code></pre></div>
 <p>Note: min freq: 20,718.0 reads</p>
 </div>
 <div id="train-classifier-for-doing-taxonomy" class="section level2">
 <h2><span class="header-section-number">3.5</span> Train Classifier (for doing taxonomy)</h2>
 <p>First up, we gotta import a the greengenes database stuff into qiime as qiime artifacts.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb11-1" data-line-number="1">$ <span class="fu">mkdir</span> classifier</a>
-<a class="sourceLine" id="cb11-2" data-line-number="2">$ <span class="bu">cd</span> classifier</a>
-<a class="sourceLine" id="cb11-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb11-4" data-line-number="4"><span class="co"># download green genes 13_8</span></a>
-<a class="sourceLine" id="cb11-5" data-line-number="5">$ <span class="fu">wget</span> ftp://greengenes.microbio.me/greengenes_release/gg_13_5/gg_13_8_otus.tar.gz</a>
-<a class="sourceLine" id="cb11-6" data-line-number="6">$ <span class="fu">gunzip</span> gg_13_8_otus.tar.gz</a>
-<a class="sourceLine" id="cb11-7" data-line-number="7">$ <span class="fu">tar</span> -xvf gg_13_8_otus.tar</a>
-<a class="sourceLine" id="cb11-8" data-line-number="8">$ <span class="fu">rm</span> gg_13_8_otus.tar</a>
-<a class="sourceLine" id="cb11-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb11-10" data-line-number="10"> <span class="co"># the sequences from greengenes</span></a>
-<a class="sourceLine" id="cb11-11" data-line-number="11">$ <span class="ex">qiime</span> tools import \</a>
-<a class="sourceLine" id="cb11-12" data-line-number="12">--type <span class="st">&#39;FeatureData[Sequence]&#39;</span> \</a>
-<a class="sourceLine" id="cb11-13" data-line-number="13">--input-path gg_13_8_otus/rep_set/99_otus.fasta \</a>
-<a class="sourceLine" id="cb11-14" data-line-number="14">--output-path 99_otus.qza</a>
-<a class="sourceLine" id="cb11-15" data-line-number="15"></a>
-<a class="sourceLine" id="cb11-16" data-line-number="16"><span class="co"># The taxonomy strings from greengenes</span></a>
-<a class="sourceLine" id="cb11-17" data-line-number="17">$ <span class="ex">qiime</span> tools import \</a>
-<a class="sourceLine" id="cb11-18" data-line-number="18">--type <span class="st">&#39;FeatureData[Taxonomy]&#39;</span> \</a>
-<a class="sourceLine" id="cb11-19" data-line-number="19">--input-format HeaderlessTSVTaxonomyFormat \</a>
-<a class="sourceLine" id="cb11-20" data-line-number="20">--input-path gg_13_8_otus/taxonomy/99_otu_taxonomy.txt \</a>
-<a class="sourceLine" id="cb11-21" data-line-number="21">--output-path 99_otus_16S_taxonomy.qza</a></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="pre-processing-sequence-reads.html#cb11-1"></a>$ <span class="fu">mkdir</span> classifier</span>
+<span id="cb11-2"><a href="pre-processing-sequence-reads.html#cb11-2"></a>$ <span class="bu">cd</span> classifier</span>
+<span id="cb11-3"><a href="pre-processing-sequence-reads.html#cb11-3"></a></span>
+<span id="cb11-4"><a href="pre-processing-sequence-reads.html#cb11-4"></a><span class="co"># download green genes 13_8</span></span>
+<span id="cb11-5"><a href="pre-processing-sequence-reads.html#cb11-5"></a>$ <span class="fu">wget</span> ftp://greengenes.microbio.me/greengenes_release/gg_13_5/gg_13_8_otus.tar.gz</span>
+<span id="cb11-6"><a href="pre-processing-sequence-reads.html#cb11-6"></a>$ <span class="fu">gunzip</span> gg_13_8_otus.tar.gz</span>
+<span id="cb11-7"><a href="pre-processing-sequence-reads.html#cb11-7"></a>$ <span class="fu">tar</span> -xvf gg_13_8_otus.tar</span>
+<span id="cb11-8"><a href="pre-processing-sequence-reads.html#cb11-8"></a>$ <span class="fu">rm</span> gg_13_8_otus.tar</span>
+<span id="cb11-9"><a href="pre-processing-sequence-reads.html#cb11-9"></a></span>
+<span id="cb11-10"><a href="pre-processing-sequence-reads.html#cb11-10"></a> <span class="co"># the sequences from greengenes</span></span>
+<span id="cb11-11"><a href="pre-processing-sequence-reads.html#cb11-11"></a>$ <span class="ex">qiime</span> tools import \</span>
+<span id="cb11-12"><a href="pre-processing-sequence-reads.html#cb11-12"></a>--type <span class="st">&#39;FeatureData[Sequence]&#39;</span> \</span>
+<span id="cb11-13"><a href="pre-processing-sequence-reads.html#cb11-13"></a>--input-path gg_13_8_otus/rep_set/99_otus.fasta \</span>
+<span id="cb11-14"><a href="pre-processing-sequence-reads.html#cb11-14"></a>--output-path 99_otus.qza</span>
+<span id="cb11-15"><a href="pre-processing-sequence-reads.html#cb11-15"></a></span>
+<span id="cb11-16"><a href="pre-processing-sequence-reads.html#cb11-16"></a><span class="co"># The taxonomy strings from greengenes</span></span>
+<span id="cb11-17"><a href="pre-processing-sequence-reads.html#cb11-17"></a>$ <span class="ex">qiime</span> tools import \</span>
+<span id="cb11-18"><a href="pre-processing-sequence-reads.html#cb11-18"></a>--type <span class="st">&#39;FeatureData[Taxonomy]&#39;</span> \</span>
+<span id="cb11-19"><a href="pre-processing-sequence-reads.html#cb11-19"></a>--input-format HeaderlessTSVTaxonomyFormat \</span>
+<span id="cb11-20"><a href="pre-processing-sequence-reads.html#cb11-20"></a>--input-path gg_13_8_otus/taxonomy/99_otu_taxonomy.txt \</span>
+<span id="cb11-21"><a href="pre-processing-sequence-reads.html#cb11-21"></a>--output-path 99_otus_16S_taxonomy.qza</span></code></pre></div>
 <p>Extract reads from the relevant region (V3-V5) out of the ref database</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb12-1" data-line-number="1">$ <span class="ex">qiime</span> feature-classifier extract-reads \</a>
-<a class="sourceLine" id="cb12-2" data-line-number="2">--i-sequences 99_otus.qza \</a>
-<a class="sourceLine" id="cb12-3" data-line-number="3">--p-f-primer CCTACGGGNGGCWGCAG  \</a>
-<a class="sourceLine" id="cb12-4" data-line-number="4">--p-r-primer GACTACHVGGGTATCTAATCC   \</a>
-<a class="sourceLine" id="cb12-5" data-line-number="5">--p-min-length 300 \</a>
-<a class="sourceLine" id="cb12-6" data-line-number="6">--p-max-length 600 \</a>
-<a class="sourceLine" id="cb12-7" data-line-number="7">--o-reads ref_seqs.qza \</a>
-<a class="sourceLine" id="cb12-8" data-line-number="8">--verbose \</a>
-<a class="sourceLine" id="cb12-9" data-line-number="9"><span class="op">&amp;&gt;</span> 16S_training.log</a></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="pre-processing-sequence-reads.html#cb12-1"></a>$ <span class="ex">qiime</span> feature-classifier extract-reads \</span>
+<span id="cb12-2"><a href="pre-processing-sequence-reads.html#cb12-2"></a>--i-sequences 99_otus.qza \</span>
+<span id="cb12-3"><a href="pre-processing-sequence-reads.html#cb12-3"></a>--p-f-primer CCTACGGGNGGCWGCAG  \</span>
+<span id="cb12-4"><a href="pre-processing-sequence-reads.html#cb12-4"></a>--p-r-primer GACTACHVGGGTATCTAATCC   \</span>
+<span id="cb12-5"><a href="pre-processing-sequence-reads.html#cb12-5"></a>--p-min-length 300 \</span>
+<span id="cb12-6"><a href="pre-processing-sequence-reads.html#cb12-6"></a>--p-max-length 600 \</span>
+<span id="cb12-7"><a href="pre-processing-sequence-reads.html#cb12-7"></a>--o-reads ref_seqs.qza \</span>
+<span id="cb12-8"><a href="pre-processing-sequence-reads.html#cb12-8"></a>--verbose \</span>
+<span id="cb12-9"><a href="pre-processing-sequence-reads.html#cb12-9"></a><span class="op">&amp;&gt;</span> 16S_training.log</span></code></pre></div>
 <p>Now, train the classifier on this region. I.e use this <code>ref_seqs.qza</code> qiime artifact as the input for feature-classifier.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb13-1" data-line-number="1">$ <span class="ex">qiime</span> feature-classifier fit-classifier-naive-bayes \</a>
-<a class="sourceLine" id="cb13-2" data-line-number="2">--i-reference-reads ref_seqs.qza \</a>
-<a class="sourceLine" id="cb13-3" data-line-number="3">--i-reference-taxonomy 99_otus_16S_taxonomy.qza \</a>
-<a class="sourceLine" id="cb13-4" data-line-number="4">--o-classifier classifier_16S.qza \</a>
-<a class="sourceLine" id="cb13-5" data-line-number="5">--verbose \</a>
-<a class="sourceLine" id="cb13-6" data-line-number="6"><span class="op">&amp;&gt;</span> 16S_classifier.log</a></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><a href="pre-processing-sequence-reads.html#cb13-1"></a>$ <span class="ex">qiime</span> feature-classifier fit-classifier-naive-bayes \</span>
+<span id="cb13-2"><a href="pre-processing-sequence-reads.html#cb13-2"></a>--i-reference-reads ref_seqs.qza \</span>
+<span id="cb13-3"><a href="pre-processing-sequence-reads.html#cb13-3"></a>--i-reference-taxonomy 99_otus_16S_taxonomy.qza \</span>
+<span id="cb13-4"><a href="pre-processing-sequence-reads.html#cb13-4"></a>--o-classifier classifier_16S.qza \</span>
+<span id="cb13-5"><a href="pre-processing-sequence-reads.html#cb13-5"></a>--verbose \</span>
+<span id="cb13-6"><a href="pre-processing-sequence-reads.html#cb13-6"></a><span class="op">&amp;&gt;</span> 16S_classifier.log</span></code></pre></div>
 <p>The output of this is our classifier, which I’ve called <code>classifier_16S.qza</code>, is what will be used in the next step.</p>
 </div>
 <div id="classify-rep-seqs" class="section level2">
 <h2><span class="header-section-number">3.6</span> Classify rep seqs</h2>
 <p>So now we’ve got the classifier, we can use it to classify our representative seqs (rep-seqs.qza), which I then tabulated and visualised:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb14-1" data-line-number="1">$ <span class="bu">cd</span> ..</a>
-<a class="sourceLine" id="cb14-2" data-line-number="2">$ <span class="fu">mkdir</span> taxonomy</a>
-<a class="sourceLine" id="cb14-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb14-4" data-line-number="4">$ <span class="ex">qiime</span> feature-classifier classify-sklearn \</a>
-<a class="sourceLine" id="cb14-5" data-line-number="5">--i-classifier classifier/classifier_16S.qza \</a>
-<a class="sourceLine" id="cb14-6" data-line-number="6">--i-reads DADA2_denoising_output/representative_sequences.qza \</a>
-<a class="sourceLine" id="cb14-7" data-line-number="7">--o-classification taxonomy/classified_rep_seqs.qza</a>
-<a class="sourceLine" id="cb14-8" data-line-number="8"></a>
-<a class="sourceLine" id="cb14-9" data-line-number="9"><span class="co"># Tabulate the features, their taxonomy and the confidence of taxonomy assignment</span></a>
-<a class="sourceLine" id="cb14-10" data-line-number="10">$ <span class="bu">cd</span> taxonomy</a>
-<a class="sourceLine" id="cb14-11" data-line-number="11"></a>
-<a class="sourceLine" id="cb14-12" data-line-number="12">$ <span class="ex">qiime</span> metadata tabulate \</a>
-<a class="sourceLine" id="cb14-13" data-line-number="13">--m-input-file classified_rep_seqs.qza \</a>
-<a class="sourceLine" id="cb14-14" data-line-number="14">--o-visualization classified_rep_seqs.qzv</a></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href="pre-processing-sequence-reads.html#cb14-1"></a>$ <span class="bu">cd</span> ..</span>
+<span id="cb14-2"><a href="pre-processing-sequence-reads.html#cb14-2"></a>$ <span class="fu">mkdir</span> taxonomy</span>
+<span id="cb14-3"><a href="pre-processing-sequence-reads.html#cb14-3"></a></span>
+<span id="cb14-4"><a href="pre-processing-sequence-reads.html#cb14-4"></a>$ <span class="ex">qiime</span> feature-classifier classify-sklearn \</span>
+<span id="cb14-5"><a href="pre-processing-sequence-reads.html#cb14-5"></a>--i-classifier classifier/classifier_16S.qza \</span>
+<span id="cb14-6"><a href="pre-processing-sequence-reads.html#cb14-6"></a>--i-reads DADA2_denoising_output/representative_sequences.qza \</span>
+<span id="cb14-7"><a href="pre-processing-sequence-reads.html#cb14-7"></a>--o-classification taxonomy/classified_rep_seqs.qza</span>
+<span id="cb14-8"><a href="pre-processing-sequence-reads.html#cb14-8"></a></span>
+<span id="cb14-9"><a href="pre-processing-sequence-reads.html#cb14-9"></a><span class="co"># Tabulate the features, their taxonomy and the confidence of taxonomy assignment</span></span>
+<span id="cb14-10"><a href="pre-processing-sequence-reads.html#cb14-10"></a>$ <span class="bu">cd</span> taxonomy</span>
+<span id="cb14-11"><a href="pre-processing-sequence-reads.html#cb14-11"></a></span>
+<span id="cb14-12"><a href="pre-processing-sequence-reads.html#cb14-12"></a>$ <span class="ex">qiime</span> metadata tabulate \</span>
+<span id="cb14-13"><a href="pre-processing-sequence-reads.html#cb14-13"></a>--m-input-file classified_rep_seqs.qza \</span>
+<span id="cb14-14"><a href="pre-processing-sequence-reads.html#cb14-14"></a>--o-visualization classified_rep_seqs.qzv</span></code></pre></div>
 </div>
 <div id="create-a-phylogenetic-tree" class="section level2">
 <h2><span class="header-section-number">3.7</span> Create a phylogenetic tree</h2>
 <p>Note that this only needs the rep seqs (not the classified rep seqs)</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb15-1" data-line-number="1">$ <span class="bu">cd</span> ..</a>
-<a class="sourceLine" id="cb15-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb15-3" data-line-number="3">$ <span class="ex">qiime</span> phylogeny align-to-tree-mafft-fasttree \</a>
-<a class="sourceLine" id="cb15-4" data-line-number="4">--i-sequences DADA2_denoising_output/representative_sequences.qza \</a>
-<a class="sourceLine" id="cb15-5" data-line-number="5">--output-dir phylogenetic_tree \</a>
-<a class="sourceLine" id="cb15-6" data-line-number="6">--p-n-threads 8 \</a>
-<a class="sourceLine" id="cb15-7" data-line-number="7">--verbose \</a>
-<a class="sourceLine" id="cb15-8" data-line-number="8"><span class="op">&amp;&gt;</span> phylogenetic_tree_generation.log</a></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb15-1"><a href="pre-processing-sequence-reads.html#cb15-1"></a>$ <span class="bu">cd</span> ..</span>
+<span id="cb15-2"><a href="pre-processing-sequence-reads.html#cb15-2"></a></span>
+<span id="cb15-3"><a href="pre-processing-sequence-reads.html#cb15-3"></a>$ <span class="ex">qiime</span> phylogeny align-to-tree-mafft-fasttree \</span>
+<span id="cb15-4"><a href="pre-processing-sequence-reads.html#cb15-4"></a>--i-sequences DADA2_denoising_output/representative_sequences.qza \</span>
+<span id="cb15-5"><a href="pre-processing-sequence-reads.html#cb15-5"></a>--output-dir phylogenetic_tree \</span>
+<span id="cb15-6"><a href="pre-processing-sequence-reads.html#cb15-6"></a>--p-n-threads 8 \</span>
+<span id="cb15-7"><a href="pre-processing-sequence-reads.html#cb15-7"></a>--verbose \</span>
+<span id="cb15-8"><a href="pre-processing-sequence-reads.html#cb15-8"></a><span class="op">&amp;&gt;</span> phylogenetic_tree_generation.log</span></code></pre></div>
 <p>Note: it’s the rooted_tree.qza file which will be used in downstream analyses.</p>
 <p>Now on to the fun stuff - taxonomy and diversity analyses!</p>
 
@@ -330,6 +336,7 @@ gitbook.start({
 "weibo": false,
 "instapaper": false,
 "vk": false,
+"whatsapp": false,
 "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
